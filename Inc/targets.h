@@ -29,6 +29,7 @@
 // #define AM32REF_F051
 // #define BLPWR
 // #define HVFLYCOLOR
+// #define R120MK2_F051
 // #define AM32REF_F051
 
 // #define G072ESC
@@ -2459,6 +2460,36 @@
 #define MILLIVOLT_PER_AMP 65
 #define CURRENT_OFFSET 0
 #define TARGET_VOLTAGE_DIVIDER 110
+#define VOLTAGE_ADC_CHANNEL LL_ADC_CHANNEL_6
+#define VOLTAGE_ADC_PIN LL_GPIO_PIN_6
+#define CURRENT_ADC_CHANNEL LL_ADC_CHANNEL_3
+#define CURRENT_ADC_PIN LL_GPIO_PIN_3
+#define USE_SERIAL_TELEMETRY
+#define TARGET_STALL_PROTECTION_INTERVAL 9000
+#endif
+
+#ifdef R120MK2_F051
+// IntelliTech Engineering R120 MK2 ESC
+// (R120 Control PCB Rev D + R120 Power PCB MK2)
+// Pinout = AM32REF_F051 / HARDWARE_GROUP_F0_B, checked against the schematic:
+//   Phase A: PA10 high, PB1 low, BEMF comparator PA0
+//   Phase B: PA9  high, PB0 low, BEMF comparator PA4
+//   Phase C: PA8  high, PA7 low, BEMF comparator PA5   (BEMF common: PA1)
+//   Signal input: PB4 (TIM3_CH1, DShot / bidirectional DShot)
+//   Serial telemetry: USART1 TX on PB6
+// Voltage sense: PA6 (ADC_IN6), 100k / 10k divider switched by Q2.
+//   110 = nominal 11:1. Set to 112 (+~1.7%) to offset the ~0.5 V drop across
+//   R29 (22R input filter) at ~24 mA, for 8S operation. Trim on the bench.
+// Current sense: PA3 (ADC_IN3), INA180A3 (gain 100) on 0.2 mOhm shunt
+//   = 20 mV/A nominal. Calibrate against a clamp meter if the shunt
+//   sense taps are not Kelvin-connected (non-Kelvin taps read high).
+#define FILE_NAME "R120MK2_F051"
+#define FIRMWARE_NAME "R120 MK2    "
+#define DEAD_TIME 45
+#define HARDWARE_GROUP_F0_B
+#define MILLIVOLT_PER_AMP 20
+#define CURRENT_OFFSET 0
+#define TARGET_VOLTAGE_DIVIDER 112
 #define VOLTAGE_ADC_CHANNEL LL_ADC_CHANNEL_6
 #define VOLTAGE_ADC_PIN LL_GPIO_PIN_6
 #define CURRENT_ADC_CHANNEL LL_ADC_CHANNEL_3
